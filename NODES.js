@@ -2,7 +2,6 @@ var Class = require('std/Class')
 	each = require('std/each'),
 	slice = require('std/slice'),
 	isArguments = require('std/isArguments'),
-	style = require('./style'),
 	Component = require('./Component'),
 	isArray = require('std/isArray')
 	arrayToObject = require('std/arrayToObject'),

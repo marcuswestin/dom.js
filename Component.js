@@ -10,7 +10,8 @@ var Class = require('std/Class'),
 	hasClass = require('./hasClass'),
 	getDocumentOf = require('./getDocumentOf'),
 	getElementOf = require('./getElementOf'),
-	getWindowOf = require('./getWindowOf')
+	getWindowOf = require('./getWindowOf'),
+	extend = require('std/extend')
 
 module.exports = Class(Publisher, function() {
 
@@ -34,6 +35,7 @@ module.exports = Class(Publisher, function() {
 		this._doc = doc
 		this._el = doc.createElement(this._tag)
 		if (this._class) { this._el.className = this._class }
+		if (this._styles) { this.style(this._styles); delete this._styles }
 		this.renderContent()
 		return this._el
 	}
@@ -57,7 +59,11 @@ module.exports = Class(Publisher, function() {
 	this.removeClass = function(className) { removeClass(this._el, className); return this }
 	this.toggleClass = function(className, shouldHave) { (shouldHave ? addClass : removeClass)(this._el, className); return this }
 	this.hasClass = function(className) { return hasClass(this._el, className) }
-	this.style = function(styles) { style(this._el, styles); return this }
+	this.style = function(styles) {
+		if (this._el) { style(this._el, styles) }
+		else { this._styles = extend(this._styles, styles) }
+		return this
+	}
 	this.opacity = function(opacity) { style.opacity(this._el, opacity); return this }
 
 	this.getOffset = function() { return getOffset(this._el) }

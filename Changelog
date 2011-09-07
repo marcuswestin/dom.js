@@ -1,2 +1,5 @@
+intended v0.1.1
++ Compoment#style now works before rendered
+
 v0.1.0
 + imported dom portion of https://github.com/marcuswestin/ui.js
