@@ -36,7 +36,7 @@ module.exports = Class(Publisher, function() {
 		this._el = doc.createElement(this._tag)
 		if (this._class) { this._el.className = this._class }
 		if (this._styles) { this.style(this._styles); delete this._styles }
-		this.renderContent()
+		if (this.renderContent) { this.renderContent() }
 		return this._el
 	}
 
