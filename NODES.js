@@ -120,6 +120,11 @@ NODES.createGenerator = function(tag) {
 	return function() { return new ClassDefinition(slice(arguments, 0)) }
 }
 
+NODES.createGeneratorWithoutClass = function(tag) {
+	var ClassDefinition = Class(NODES.NODE, function() { this._tag = tag })
+	return function() { return new ClassDefinition([null].concat(slice(arguments, 0))) }
+}
+
 NODES.exposeGlobals = function() {
 	TEXT = function() { return new NODES.TEXT(slice(arguments, 0)) }
 	FRAGMENT = function() { return new NODES.FRAGMENT(slice(arguments, 0)) }
