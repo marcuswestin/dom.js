@@ -10,8 +10,9 @@ module.exports = function(element, eventName, handler) {
 			break
 		}
 	}
+		
 	if (!handler || !handlers.length) {
-		module.exports._removeHandler(handlers._realHandler)
+		module.exports._removeHandler(element, eventName, handlers._realHandler)
 		delete map[eventName]
 	}
 }
