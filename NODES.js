@@ -1,9 +1,9 @@
-var Class = require('std/Class')
+var Class = require('std/Class'),
 	each = require('std/each'),
 	slice = require('std/slice'),
 	isArguments = require('std/isArguments'),
 	Component = require('./Component'),
-	isArray = require('std/isArray')
+	isArray = require('std/isArray'),
 	arrayToObject = require('std/arrayToObject'),
 	curry = require('std/curry'),
 	bind = require('std/bind')
@@ -58,8 +58,8 @@ NODES.NODE = Class(Component, function() {
 
 	this._processArg = function(arg) {
 		if (!arg) { return }
-		var node = this._el
-		, doc = this._doc
+		var node = this._el,
+			doc = this._doc
 		if (typeof arg._render == 'function') {
 			node.appendChild(arg._render(doc))
 		} else if (typeof arg == 'string' || typeof arg == 'number') {
