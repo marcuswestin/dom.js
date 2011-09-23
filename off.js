@@ -3,6 +3,9 @@ var on = require('./on')
 module.exports = function(element, eventName, handler) {
 	var map = on.getElementMap(element),
 		handlers = map[eventName]
+	
+	if (!handlers) { return }
+	
 	if (handler) {
 		for (var i=0; i<handlers.length; i++) {
 			if (handler != handlers[i]) { continue }
