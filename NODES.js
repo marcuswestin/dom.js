@@ -35,6 +35,7 @@ NODES.NODE = Class(Component, function() {
 		touchend: curry(this.on, 'touchend'),
 		touchmove: curry(this.on, 'touchmove'),
 		touchcancel: curry(this.on, 'touchcancel'),
+		load: curry(this.on, 'load'),
 		style: this.style
 	}
 
