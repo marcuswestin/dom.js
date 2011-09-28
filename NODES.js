@@ -18,7 +18,14 @@ NODES.NODE = Class(Component, function() {
 	}
 
 	this.on = function(event, handler) {
-		Component.prototype.on.call(this, event, bind(this, handler))
+		if (this._el) {
+			Component.prototype.on.call(this, event, bind(this, handler))
+		} else {
+			var arg = {}
+			arg[event] = handler
+			this._args.push(arg)
+		}
+		return this
 	}
 
 	this.attributeHandlers = {
