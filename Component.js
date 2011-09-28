@@ -72,4 +72,5 @@ module.exports = Class(Publisher, function() {
 
 	this.remove = function() { this._el.parentNode.removeChild(this._el); return this }
 	this.empty = function() { this._el.innerHTML = ''; return this }
+	this.text = function(text) { this.empty(); this._el.appendChild(this._doc.createTextNode(text)); return this }
 })
