@@ -158,7 +158,8 @@ NODES.exposeGlobals = function() {
 	IFRAME = NODES.createGenerator('IFRAME')
 	BUTTON = NODES.createGenerator('BUTTON')
 	INPUT = NODES.createGenerator('INPUT', {
-		'value':function(val) { if (typeof val != 'undefined') { this._el.value = val; return this } else { return this._el.value } }
+		'value':function(val) { if (typeof val != 'undefined') { this._el.value = val; return this } else { return this._el.value } },
+		'select':function() { this._el.select(); return this }
 	})
 	TEXTAREA = NODES.createGenerator('TEXTAREA')
 	LABEL = NODES.createGenerator('LABEL')
