@@ -123,8 +123,16 @@ NODES.FRAGMENT = Class(NODES.NODE, function() {
 
 NODES.attributeHandlers = NODES.NODE.prototype.attributeHandlers
 
-NODES.createGenerator = function(tag) {
-	var ClassDefinition = Class(NODES.NODE, function() { this._tag = tag })
+NODES.createGenerator = function(tag, methods) {
+	var ClassDefinition = Class(NODES.NODE, function() {
+
+		this._tag = tag
+
+		each(methods, this, function(method, name) {
+			this[name] = method
+		})
+
+	})
 	return function() { return new ClassDefinition(slice(arguments, 0)) }
 }
 
@@ -148,8 +156,9 @@ NODES.exposeGlobals = function() {
 	H4 = NODES.createGenerator('H4')
 	IFRAME = NODES.createGenerator('IFRAME')
 	BUTTON = NODES.createGenerator('BUTTON')
-	INPUT = NODES.createGenerator('INPUT', { type:'text' })
-	PASSWORD = NODES.createGenerator('INPUT', { type:'password' })
+	INPUT = NODES.createGenerator('INPUT', {
+		'value':function(val) { if (typeof val != 'undefined') { this._el.value = val; return this } else { return this._el.value } }
+	})
 	TEXTAREA = NODES.createGenerator('TEXTAREA')
 	LABEL = NODES.createGenerator('LABEL')
 }
