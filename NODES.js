@@ -38,6 +38,7 @@ NODES.NODE = Class(Component, function() {
 		keydown: curry(this.on, 'keydown'),
 		keyup: curry(this.on, 'keyup'),
 		blur: curry(this.on, 'blur'),
+		focus: curry(this.on, 'focus'),
 		touchstart: curry(this.on, 'touchstart'),
 		touchend: curry(this.on, 'touchend'),
 		touchmove: curry(this.on, 'touchmove'),
