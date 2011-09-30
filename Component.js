@@ -16,7 +16,7 @@ var Class = require('std/Class'),
 module.exports = Class(Publisher, function() {
 
 	this._tag = 'div'
-	this._class = null
+	this._class = ''
 
 	this.init = function() {
 		Publisher.prototype.init.apply(this)
@@ -55,7 +55,7 @@ module.exports = Class(Publisher, function() {
 	this.on = function(eventName, handler) { return on(this._el, eventName, handler) }
 	this.off = function(eventName, handler) { return off(this._el, eventName, handler) }
 
-	this.addClass = function(className) { addClass(this._el, className); return this }
+	this.addClass = function(className) { (this._el ? addClass(this._el, className) : this._class += (' ' + className)); return this }
 	this.removeClass = function(className) { removeClass(this._el, className); return this }
 	this.toggleClass = function(className, shouldHave) { (shouldHave ? addClass : removeClass)(this._el, className); return this }
 	this.hasClass = function(className) { return hasClass(this._el, className) }
