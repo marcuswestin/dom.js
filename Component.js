@@ -46,8 +46,25 @@ module.exports = Class(Publisher, function() {
 
 	this.create = function(tag, properties) { return create(tag, properties, this._doc) }
 
-	this.append = function(node) { this._el.appendChild(getElementOf(node.render ? node.render(this) : node)); return node }
+	this.append = function(node) {
+		for (var i=0; i<arguments.length; i++) {
+			var node = arguments[i]
+			this._el.appendChild(getElementOf(node.render ? node.render(this) : node));
+		}
+		return node
+	}
 	this.appendTo = function(node) { getElementOf(node).appendChild(this._render(node)); return this }
+	this.prepend = function() {
+		for (var i=0; i<arguments.length; i++) { this.insert(arguments[i], i) }
+		return this
+	}
+	this.insert = function(node, index) {
+		var el = this._el,
+			nodeEl = getElementOf(node.render ? node.render(this) : node)
+		if (index >= el.childNodes.length) { el.appendChild(nodeEl) }
+		else { el.insertBefore(nodeEl, el.childNodes[index]) }
+		return this
+	}
 
 	this.hide = function() { this._el.style.display = 'none'; return this }
 	this.show = function() { this._el.style.display = 'block'; return this }
