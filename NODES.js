@@ -85,6 +85,12 @@ NODES.NODE = Class(Component, function() {
 		else { this._args = this._args.concat(slice(arguments)) }
 		return this
 	}
+	
+	this.text = function(text) {
+		if (this._el) { Component.prototype.text.apply(this, arguments) }
+		else { this._args.push(text.toString()) }
+		return this
+	}
 })
 
 NODES.TEXT = Class(NODES.NODE, function() {
