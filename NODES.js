@@ -163,4 +163,5 @@ NODES.exposeGlobals = function() {
 	})
 	TEXTAREA = NODES.createGenerator('TEXTAREA')
 	LABEL = NODES.createGenerator('LABEL')
+	TEXT = NODES.createGeneratorWithoutClass('SPAN')
 }
