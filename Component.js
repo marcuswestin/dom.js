@@ -11,7 +11,7 @@ var Class = require('std/Class'),
 	getDocumentOf = require('./getDocumentOf'),
 	getElementOf = require('./getElementOf'),
 	getWindowOf = require('./getWindowOf'),
-	extend = require('std/extend')
+	each = require('std/each')
 
 module.exports = Class(Publisher, function() {
 
@@ -61,7 +61,8 @@ module.exports = Class(Publisher, function() {
 	this.hasClass = function(className) { return hasClass(this._el, className) }
 	this.style = function(styles) {
 		if (this._el) { style(this._el, styles) }
-		else { this._styles = extend(this._styles, styles) }
+		else if (this._styles) { each(styles, bind(this, function(val, key) { this._styles[key] = val })) }
+		else { this._styles = styles }
 		return this
 	}
 	this.opacity = function(opacity) { style.opacity(this._el, opacity); return this }
