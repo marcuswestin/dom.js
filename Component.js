@@ -11,7 +11,8 @@ var Class = require('std/Class'),
 	getDocumentOf = require('./getDocumentOf'),
 	getElementOf = require('./getElementOf'),
 	getWindowOf = require('./getWindowOf'),
-	each = require('std/each')
+	each = require('std/each'),
+	bind = require('std/bind')
 
 module.exports = Class(Publisher, function() {
 
