@@ -157,6 +157,7 @@ NODES.exposeGlobals = function() {
 	H4 = NODES.createGenerator('H4')
 	UL = NODES.createGenerator('UL')
 	LI = NODES.createGenerator('LI')
+	OL = NODES.createGenerator('OL')
 	IFRAME = NODES.createGenerator('IFRAME')
 	BUTTON = NODES.createGenerator('BUTTON')
 	INPUT = NODES.createGenerator('INPUT', {
