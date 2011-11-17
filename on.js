@@ -60,7 +60,7 @@ module.exports._addListener = function(element, eventName, handler) {
 }
 
 module.exports._handleEvent = function(element, eventName, e) {
-	var eventObj = module.exports._normalizeEvent(eventName, e),
+	var eventObj = module.exports.normalizeEvent(eventName, e),
 		elementMap = module.exports.getElementMap(element),
 		handlers = elementMap[eventName]
 	for (var i=0; i<handlers.length; i++) {
@@ -68,7 +68,7 @@ module.exports._handleEvent = function(element, eventName, e) {
 	}
 }
 
-module.exports._normalizeEvent = function(eventName, e) {
+module.exports.normalizeEvent = function(eventName, e) {
 	e = e || event
 	var eventObj = {
 		keyCode: e.keyCode,
