@@ -58,7 +58,11 @@ module.exports = Class(Publisher, function() {
 
 	this.addClass = function(className) { (this._el ? addClass(this._el, className) : this._class += (' ' + className)); return this }
 	this.removeClass = function(className) { removeClass(this._el, className); return this }
-	this.toggleClass = function(className, shouldHave) { (shouldHave ? addClass : removeClass)(this._el, className); return this }
+	this.toggleClass = function(className, shouldHave) {
+		if (typeof shouldHave != 'boolean') { shouldHave = !hasClass(this._el, className) }
+		(shouldHave ? addClass : removeClass)(this._el, className)
+		return this
+	}
 	this.hasClass = function(className) { return hasClass(this._el, className) }
 	this.style = function(styles) {
 		if (this._el) { style(this._el, styles) }
