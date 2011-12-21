@@ -143,6 +143,11 @@ NODES.createGeneratorWithoutClass = function(tag) {
 	return function() { return new ClassDefinition([null].concat(slice(arguments, 0))) }
 }
 
+NODES.INPUT = NODES.createGenerator('INPUT', {
+	'value':function(val) { if (typeof val != 'undefined') { this._el.value = val; return this } else { return this._el.value } },
+	'select':function() { this._el.select(); return this }
+})
+
 NODES.exposeGlobals = function() {
 	TEXT = function() { return new NODES.TEXT(slice(arguments, 0)) }
 	FRAGMENT = function() { return new NODES.FRAGMENT(slice(arguments, 0)) }
@@ -161,10 +166,7 @@ NODES.exposeGlobals = function() {
 	OL = NODES.createGenerator('OL')
 	IFRAME = NODES.createGenerator('IFRAME')
 	BUTTON = NODES.createGenerator('BUTTON')
-	INPUT = NODES.createGenerator('INPUT', {
-		'value':function(val) { if (typeof val != 'undefined') { this._el.value = val; return this } else { return this._el.value } },
-		'select':function() { this._el.select(); return this }
-	})
+	INPUT = NODES.INPUT
 	TEXTAREA = NODES.createGenerator('TEXTAREA')
 	LABEL = NODES.createGenerator('LABEL')
 	TEXT = NODES.createGeneratorWithoutClass('SPAN')
