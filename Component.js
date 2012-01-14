@@ -23,13 +23,13 @@ module.exports = Class(Publisher, function() {
 		Publisher.prototype.init.apply(this)
 	}
 
-	this.render = function(component) {
-		this._render(component)
+	this.render = function(inComponent) {
+		this._render(inComponent)
 		return this
 	}
 
-	this._render = function(component) {
-		var doc = getDocumentOf(component)
+	this._render = function(inComponent) {
+		var doc = getDocumentOf(inComponent)
 		if (this._doc == doc) { return this._el }
 		if (this._el) { this.unrender() }
 
