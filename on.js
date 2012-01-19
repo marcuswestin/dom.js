@@ -74,6 +74,7 @@ module.exports.normalizeEvent = function(eventName, e) {
 		keyCode: e.keyCode,
 		metaKey: e.metaKey,
 		target: e.target || e.srcElement,
+		source: e.source, // postmessage
 		origin: e.origin,
 		data: e.data,
 		touches: e.touches
