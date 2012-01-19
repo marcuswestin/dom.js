@@ -45,6 +45,7 @@ NODES.NODE = Class(Component, function() {
 		touchmove: curry(this.on, 'touchmove'),
 		touchcancel: curry(this.on, 'touchcancel'),
 		load: curry(this.on, 'load'),
+		submit: curry(this.on, 'submit'),
 		style: this.style
 	}
 
@@ -145,7 +146,9 @@ NODES.createGeneratorWithoutClass = function(tag) {
 
 NODES.INPUT = NODES.createGenerator('INPUT', {
 	'value':function(val) { if (typeof val != 'undefined') { this._el.value = val; return this } else { return this._el.value } },
-	'select':function() { this._el.select(); return this }
+	'select':function() { this._el.select(); return this },
+	'focus':function() { this._el.focus(); return this },
+	'blur':function() { this._el.blur(); return this }
 })
 
 NODES.exposeGlobals = function() {
@@ -171,4 +174,5 @@ NODES.exposeGlobals = function() {
 	LABEL = NODES.createGenerator('LABEL')
 	TEXT = NODES.createGeneratorWithoutClass('SPAN')
 	BR = NODES.createGenerator('BR')
+	FORM = NODES.createGenerator('FORM')
 }
