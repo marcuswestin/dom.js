@@ -35,7 +35,6 @@ function updateState(key, val) {
 	if (arguments.length == 1) {
 		var updateWith = key
 		each(updateWith, function(val, key) { currentState[key] = val })
-		setState(currentState)
 	} else {
 		currentState[key] = val
 	}
