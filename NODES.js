@@ -148,7 +148,9 @@ NODES.INPUT = NODES.createGenerator('INPUT', {
 	'value':function(val) { if (typeof val != 'undefined') { this._el.value = val; return this } else { return this._el.value } },
 	'select':function() { this._el.select(); return this },
 	'focus':function() { this._el.focus(); return this },
-	'blur':function() { this._el.blur(); return this }
+	'blur':function() { this._el.blur(); return this },
+	'disable':function() { this._el.disabled = true; return this },
+	'enable':function() { this._el.disabled = false; return this }
 })
 
 NODES.exposeGlobals = function() {
