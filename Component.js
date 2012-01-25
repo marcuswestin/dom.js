@@ -70,9 +70,12 @@ module.exports = Class(Publisher, function() {
 	}
 	this.hasClass = function(className) { return hasClass(this._el, className) }
 	this.style = function(styles) {
-		if (this._el) { style(this._el, styles) }
-		else if (this._styles) { each(styles, bind(this, function(val, key) { this._styles[key] = val })) }
-		else { this._styles = styles }
+		if (this._el) {
+			style(this._el, styles)
+		} else {
+			if (!this._styles) { this._styles = {} }
+			each(styles, bind(this, function(val, key) { this._styles[key] = val }))
+		}
 		return this
 	}
 	this.opacity = function(opacity) { style.opacity(this._el, opacity); return this }
