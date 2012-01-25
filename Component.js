@@ -54,6 +54,12 @@ module.exports = Class(Publisher, function() {
 		this.remove()
 		return node
 	}
+	this.prepend = function(node, index) {
+		var beforeEl = this._el.childNodes[index || 0]
+		if (!beforeEl) { return this.append(node) }
+		this._el.insertBefore(getElementOf(node.render ? node.render(this) : node), beforeEl)
+		return this
+	}
 
 	this.hide = function() { this._el.style.display = 'none'; return this }
 	this.show = function() { this._el.style.display = 'block'; return this }
