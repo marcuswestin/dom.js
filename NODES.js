@@ -153,6 +153,15 @@ NODES.INPUT = NODES.createGenerator('INPUT', {
 	'enable':function() { this._el.disabled = false; return this }
 })
 
+FORM = NODES.createGenerator('FORM', {
+	'renderContent':function() {
+		NODES.NODE.prototype.renderContent.apply(this)
+		this.getElement().action = '#'
+		this.append(INPUT({ type:'submit' }).style({ visibility:'hidden', position:'absolute', top:-9999, left:-9999 }))
+	}
+})
+
+
 NODES.exposeGlobals = function() {
 	TEXT = function() { return new NODES.TEXT(slice(arguments, 0)) }
 	FRAGMENT = function() { return new NODES.FRAGMENT(slice(arguments, 0)) }
@@ -176,5 +185,4 @@ NODES.exposeGlobals = function() {
 	LABEL = NODES.createGenerator('LABEL')
 	TEXT = NODES.createGeneratorWithoutClass('SPAN')
 	BR = NODES.createGenerator('BR')
-	FORM = NODES.createGenerator('FORM')
 }
