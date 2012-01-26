@@ -68,7 +68,7 @@ NODES.NODE = Class(Component, function() {
 	}
 
 	this._processArg = function(arg) {
-		if (!arg) { return }
+		if (arg == null) { return }
 		var node = this._el,
 			doc = this._doc
 		if (typeof arg._render == 'function') {
