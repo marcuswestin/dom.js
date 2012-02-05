@@ -5,40 +5,51 @@ var on = require('dom/on'),
 module.exports = {
 	get:get,
 	set:set,
-	getState:getState,
-	setState:setState,
-	updateState:updateState,
-	observe:observe
+	getData:getData,
+	setData:setData,
+	updateData:updateData,
+	observe:observe,
+	push:push,
+	replace:replace
+}
+
+function replace(hash) {
+	var locationWithoutHash = location.toString().split('#')[0]
+	location.replace(locationWithoutHash + '#' + hash)
+}
+
+function push(component) {
+	var hash = get()
+	set(hash ? hash+'/'+component : component)
 }
 
 function get() {
-	var hash = decodeURIComponent(location.href.split('#')[1]) // Damn Firefox! http://stackoverflow.com/questions/1703552/encoding-of-window-location-hash
-	return hash
+	var match = location.href.match(/#(.*)/)
+	return match ? match[1] : ''
 }
 
-function set(to) {
-	var hash = encodeURIComponent(to)
+function set(hash) {
 	location.hash = '#'+hash
 }
 
-function getState() {
-	try { return JSON.parse(get()) }
+function getData() {
+	try { return JSON.parse(decodeURIComponent(get())) }
 	catch(e) { return {} }
 }
 
-function setState(state) {
-	set(JSON.stringify(state))
+function setData(state) {
+	set(encodeURIComponent(JSON.stringify(state)))
 }
 
-function updateState(key, val) {
-	var currentState = getState()
+function updateData(key, val) {
+	var currentState = getData()
 	if (arguments.length == 1) {
 		var updateWith = key
 		each(updateWith, function(val, key) { currentState[key] = val })
 	} else {
 		currentState[key] = val
 	}
-	setState(currentState)
+	setData(currentState)
 }
 
 var observers = []
@@ -49,8 +60,6 @@ function observe(callback) {
 
 function onHashChange() {
 	var hash = get()
-	try { hash = JSON.parse(hash) }
-	catch(e) {}
 	each(observers, invokeWith(hash))
 }
 
