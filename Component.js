@@ -47,7 +47,14 @@ module.exports = Class(Publisher, function() {
 
 	this.create = function(tag, properties) { return create(tag, properties, this._doc) }
 
-	this.append = function(node) { this._el.appendChild(getElementOf(node.render ? node.render(this) : node)); return node }
+	this.append = function(/* node1, node2, ... */) {
+		var lastNode
+		each(arguments, this, function(node) {
+			this._el.appendChild(getElementOf(node.render ? node.render(this) : node))
+			lastNode = node
+		})
+		return lastNode
+	}
 	this.appendTo = function(node) { getElementOf(node).appendChild(this._render(node)); return this }
 	this.replaceWith = function(node) {
 		this._el.parentNode.insertBefore(getElementOf(node.render ? node.render(this) : node), this._el);
