@@ -46,6 +46,7 @@ NODES.NODE = Class(Component, function() {
 		touchcancel: curry(this.on, 'touchcancel'),
 		load: curry(this.on, 'load'),
 		submit: curry(this.on, 'submit'),
+		scroll: curry(this.on, 'scroll'),
 		style: this.style
 	}
 
