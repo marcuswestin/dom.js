@@ -77,7 +77,8 @@ module.exports.normalizeEvent = function(eventName, e) {
 		source: e.source, // postmessage
 		origin: e.origin,
 		data: e.data,
-		touches: e.touches
+		touches: e.touches,
+		changedTouches: e.changedTouches
 	}
 
 	if (eventName == 'mousewheel') {
