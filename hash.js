@@ -59,8 +59,7 @@ function observe(callback) {
 }
 
 function onHashChange() {
-	var hash = get()
-	each(observers, invokeWith(hash))
+	each(observers, invokeWith(get()))
 }
 
 if ('onhashchange' in window) {
