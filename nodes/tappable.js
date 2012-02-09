@@ -25,7 +25,7 @@ function tappable(handlers, tapHandler) {
 			touchcancel: curry(endTouch, tapHandler)
 		} : {
 			click: tapHandler,
-			mousedown: setActive,
+			mousedown: onMouseDown,
 			mouseup: setInactive,
 			mouseout: setInactive
 		})
@@ -107,7 +107,8 @@ function clearState() {
 	delete this.__activeDelayTimeout
 }
 
-function setActive() {
+function onMouseDown(e) {
+	e.cancel()
 	this.addClass('active')
 }
 
