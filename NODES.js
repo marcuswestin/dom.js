@@ -8,9 +8,9 @@ var Class = require('std/Class'),
 	curry = require('std/curry'),
 	bind = require('std/bind')
 
-var NODES = module.exports
+var _NODES = module.exports
 
-NODES.NODE = Class(Component, function() {
+_NODES.NODE = Class(Component, function() {
 
 	this.init = function(args) {
 		// No need to call Component.init - Nodes are not expected to publish
@@ -99,7 +99,7 @@ NODES.NODE = Class(Component, function() {
 	}
 })
 
-NODES.TEXT = Class(NODES.NODE, function() {
+_NODES.TEXT = Class(_NODES.NODE, function() {
 	this._render = function(doc) {
 		var args = this._args,
 			text = args.length > 1 ? slice(args).join(' ') : args[0]
@@ -107,7 +107,7 @@ NODES.TEXT = Class(NODES.NODE, function() {
 	}
 })
 
-NODES.HTML = Class(NODES.NODE, function() {
+_NODES.HTML = Class(_NODES.NODE, function() {
 	this._render = function(doc) {
 		var args = this._args,
 			html = args.length > 1 ? slice(args).join(' ') : args[0],
@@ -117,7 +117,7 @@ NODES.HTML = Class(NODES.NODE, function() {
 	}
 })
 
-NODES.FRAGMENT = Class(NODES.NODE, function() {
+_NODES.FRAGMENT = Class(_NODES.NODE, function() {
 	this.render = function(doc) {
 		this._el = doc.createDocumentFragment()
 		this._processArgs(this._args, 0)
@@ -125,10 +125,10 @@ NODES.FRAGMENT = Class(NODES.NODE, function() {
 	}
 })
 
-NODES.attributeHandlers = NODES.NODE.prototype.attributeHandlers
+_NODES.attributeHandlers = _NODES.NODE.prototype.attributeHandlers
 
-NODES.createGenerator = function(tag, methods) {
-	var ClassDefinition = Class(NODES.NODE, function() {
+_NODES.createGenerator = function(tag, methods) {
+	var ClassDefinition = Class(_NODES.NODE, function() {
 
 		this._tag = tag
 
@@ -140,12 +140,12 @@ NODES.createGenerator = function(tag, methods) {
 	return function() { return new ClassDefinition(slice(arguments, 0)) }
 }
 
-NODES.createGeneratorWithoutClass = function(tag) {
-	var ClassDefinition = Class(NODES.NODE, function() { this._tag = tag })
+_NODES.createGeneratorWithoutClass = function(tag) {
+	var ClassDefinition = Class(_NODES.NODE, function() { this._tag = tag })
 	return function() { return new ClassDefinition([null].concat(slice(arguments, 0))) }
 }
 
-NODES.INPUT = NODES.createGenerator('INPUT', {
+_NODES.INPUT = _NODES.createGenerator('INPUT', {
 	'value':function(val) { if (typeof val != 'undefined') { this._el.value = val; return this } else { return this._el.value } },
 	'select':function() { this._el.select(); return this },
 	'focus':function() { this._el.focus(); return this },
@@ -154,36 +154,37 @@ NODES.INPUT = NODES.createGenerator('INPUT', {
 	'enable':function() { this._el.disabled = false; return this }
 })
 
-FORM = NODES.createGenerator('FORM', {
+FORM = _NODES.createGenerator('FORM', {
 	'renderContent':function() {
-		NODES.NODE.prototype.renderContent.apply(this)
+		_NODES.NODE.prototype.renderContent.apply(this)
 		this.getElement().action = '#'
 		this.append(INPUT({ type:'submit' }).style({ visibility:'hidden', position:'absolute', top:-9999, left:-9999 }))
 	}
 })
 
 
-NODES.exposeGlobals = function() {
-	TEXT = function() { return new NODES.TEXT(slice(arguments, 0)) }
-	FRAGMENT = function() { return new NODES.FRAGMENT(slice(arguments, 0)) }
-	HTML = function() { return new NODES.HTML(slice(arguments, 0)) }
-	DIV = NODES.createGenerator('DIV')
-	SPAN = NODES.createGenerator('SPAN')
-	IMG = NODES.createGenerator('IMG')
-	A = NODES.createGenerator('A')
-	P = NODES.createGenerator('P')
-	H1 = NODES.createGenerator('H1')
-	H2 = NODES.createGenerator('H2')
-	H3 = NODES.createGenerator('H3')
-	H4 = NODES.createGenerator('H4')
-	UL = NODES.createGenerator('UL')
-	LI = NODES.createGenerator('LI')
-	OL = NODES.createGenerator('OL')
-	IFRAME = NODES.createGenerator('IFRAME')
-	BUTTON = NODES.createGenerator('BUTTON')
-	INPUT = NODES.INPUT
-	TEXTAREA = NODES.createGenerator('TEXTAREA')
-	LABEL = NODES.createGenerator('LABEL')
-	TEXT = NODES.createGeneratorWithoutClass('SPAN')
-	BR = NODES.createGenerator('BR')
+_NODES.exposeGlobals = function() {
+	TEXT = function() { return new _NODES.TEXT(slice(arguments, 0)) }
+	FRAGMENT = function() { return new _NODES.FRAGMENT(slice(arguments, 0)) }
+	HTML = function() { return new _NODES.HTML(slice(arguments, 0)) }
+	DIV = _NODES.createGenerator('DIV')
+	SPAN = _NODES.createGenerator('SPAN')
+	IMG = _NODES.createGenerator('IMG')
+	A = _NODES.createGenerator('A')
+	P = _NODES.createGenerator('P')
+	H1 = _NODES.createGenerator('H1')
+	H2 = _NODES.createGenerator('H2')
+	H3 = _NODES.createGenerator('H3')
+	H4 = _NODES.createGenerator('H4')
+	UL = _NODES.createGenerator('UL')
+	LI = _NODES.createGenerator('LI')
+	OL = _NODES.createGenerator('OL')
+	IFRAME = _NODES.createGenerator('IFRAME')
+	BUTTON = _NODES.createGenerator('BUTTON')
+	INPUT = _NODES.INPUT
+	TEXTAREA = _NODES.createGenerator('TEXTAREA')
+	LABEL = _NODES.createGenerator('LABEL')
+	TEXT = _NODES.createGeneratorWithoutClass('SPAN')
+	BR = _NODES.createGenerator('BR')
+	NODES = _NODES
 }
