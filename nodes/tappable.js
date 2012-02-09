@@ -35,6 +35,7 @@ var preventScroll = {
 	onTouchStart: function(e) {
 		// TODO Don't listen to move, end or cancel until touch start
 		if (e.touches.length > 1) { return }
+		e.cancel()
 		// if (this.hasClass('disabled')) { return }
 		var offset = this.getOffset()
 		this.__touchRect = new Rect(offset.left, offset.top, offset.width, offset.height).pad(10)
