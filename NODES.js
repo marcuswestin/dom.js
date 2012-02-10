@@ -47,6 +47,7 @@ _NODES.NODE = Class(Component, function() {
 		load: curry(this.on, 'load'),
 		submit: curry(this.on, 'submit'),
 		scroll: curry(this.on, 'scroll'),
+		className: this.addClass,
 		style: this.style
 	}
 
@@ -63,6 +64,9 @@ _NODES.NODE = Class(Component, function() {
 	}
 
 	this._processArgs = function(args, index) {
+		if (this._class) {
+			this._el.className = this._class
+		}
 		while (index < args.length) {
 			this._processArg(args[index++])
 		}
