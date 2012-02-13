@@ -47,7 +47,6 @@ module.exports = Class(Publisher, function() {
 
 	this.create = function(tag, properties) { return create(tag, properties, this._doc) }
 
-<<<<<<< HEAD
 	this.append = function(/* node1, node2, ... */) {
 		var lastNode
 		each(arguments, this, function(node) {
