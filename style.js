@@ -9,7 +9,7 @@ var style = module.exports = function(element, styleProps) {
     else if (key == 'opacity') { return style.opacity(element, val) }
     else if (style.prefixed[key]) { key = style.prefix + key }
     
-    if (typeof val == 'number') { val = val + 'px' }
+    if (typeof val == 'number' && !style.numberProperties[key]) { val = val + 'px' }
     if (val != null) { elStyle[key] = val } // catches null and undefined
   })
   return element
@@ -24,6 +24,11 @@ style.prefixed = {
   'boxShadow':true,
   'borderRadius':true,
   'transition':true
+}
+
+style.numberProperties = {
+	'z-index':true,
+	'zIndex':true
 }
 
 style.opacity = function(el, fraction) {

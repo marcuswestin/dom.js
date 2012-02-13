@@ -8,9 +8,9 @@ var Class = require('std/Class'),
 	curry = require('std/curry'),
 	bind = require('std/bind')
 
-var NODES = module.exports
+var _NODES = module.exports
 
-NODES.NODE = Class(Component, function() {
+_NODES.NODE = Class(Component, function() {
 
 	this.init = function(args) {
 		// No need to call Component.init - Nodes are not expected to publish
@@ -18,7 +18,14 @@ NODES.NODE = Class(Component, function() {
 	}
 
 	this.on = function(event, handler) {
-		Component.prototype.on.call(this, event, bind(this, handler))
+		if (this._el) {
+			Component.prototype.on.call(this, event, bind(this, handler))
+		} else {
+			var arg = {}
+			arg[event] = handler
+			this._args.push(arg)
+		}
+		return this
 	}
 
 	this.attributeHandlers = {
@@ -31,10 +38,16 @@ NODES.NODE = Class(Component, function() {
 		keydown: curry(this.on, 'keydown'),
 		keyup: curry(this.on, 'keyup'),
 		blur: curry(this.on, 'blur'),
+		focus: curry(this.on, 'focus'),
+		change: curry(this.on, 'change'),
 		touchstart: curry(this.on, 'touchstart'),
 		touchend: curry(this.on, 'touchend'),
 		touchmove: curry(this.on, 'touchmove'),
 		touchcancel: curry(this.on, 'touchcancel'),
+		load: curry(this.on, 'load'),
+		submit: curry(this.on, 'submit'),
+		scroll: curry(this.on, 'scroll'),
+		className: this.addClass,
 		style: this.style
 	}
 
@@ -51,13 +64,16 @@ NODES.NODE = Class(Component, function() {
 	}
 
 	this._processArgs = function(args, index) {
+		if (this._class) {
+			this._el.className = this._class
+		}
 		while (index < args.length) {
 			this._processArg(args[index++])
 		}
 	}
 
 	this._processArg = function(arg) {
-		if (!arg) { return }
+		if (arg == null) { return }
 		var node = this._el,
 			doc = this._doc
 		if (typeof arg._render == 'function') {
@@ -93,7 +109,7 @@ NODES.NODE = Class(Component, function() {
 	}
 })
 
-NODES.TEXT = Class(NODES.NODE, function() {
+_NODES.TEXT = Class(_NODES.NODE, function() {
 	this._render = function(doc) {
 		var args = this._args,
 			text = args.length > 1 ? slice(args).join(' ') : args[0]
@@ -101,7 +117,7 @@ NODES.TEXT = Class(NODES.NODE, function() {
 	}
 })
 
-NODES.HTML = Class(NODES.NODE, function() {
+_NODES.HTML = Class(_NODES.NODE, function() {
 	this._render = function(doc) {
 		var args = this._args,
 			html = args.length > 1 ? slice(args).join(' ') : args[0],
@@ -111,7 +127,7 @@ NODES.HTML = Class(NODES.NODE, function() {
 	}
 })
 
-NODES.FRAGMENT = Class(NODES.NODE, function() {
+_NODES.FRAGMENT = Class(_NODES.NODE, function() {
 	this.render = function(doc) {
 		this._el = doc.createDocumentFragment()
 		this._processArgs(this._args, 0)
@@ -119,36 +135,67 @@ NODES.FRAGMENT = Class(NODES.NODE, function() {
 	}
 })
 
-NODES.attributeHandlers = NODES.NODE.prototype.attributeHandlers
+_NODES.attributeHandlers = _NODES.NODE.prototype.attributeHandlers
 
-NODES.createGenerator = function(tag) {
-	var ClassDefinition = Class(NODES.NODE, function() { this._tag = tag })
+_NODES.createGenerator = function(tag, methods) {
+	var ClassDefinition = Class(_NODES.NODE, function() {
+
+		this._tag = tag
+
+		each(methods, this, function(method, name) {
+			this[name] = method
+		})
+
+	})
 	return function() { return new ClassDefinition(slice(arguments, 0)) }
 }
 
-NODES.createGeneratorWithoutClass = function(tag) {
-	var ClassDefinition = Class(NODES.NODE, function() { this._tag = tag })
+_NODES.createGeneratorWithoutClass = function(tag) {
+	var ClassDefinition = Class(_NODES.NODE, function() { this._tag = tag })
 	return function() { return new ClassDefinition([null].concat(slice(arguments, 0))) }
 }
 
-NODES.exposeGlobals = function() {
-	TEXT = function() { return new NODES.TEXT(slice(arguments, 0)) }
-	FRAGMENT = function() { return new NODES.FRAGMENT(slice(arguments, 0)) }
-	HTML = function() { return new NODES.HTML(slice(arguments, 0)) }
-	DIV = NODES.createGenerator('DIV')
-	SPAN = NODES.createGenerator('SPAN')
-	IMG = NODES.createGenerator('IMG')
-	A = NODES.createGenerator('A')
-	P = NODES.createGenerator('P')
-	H1 = NODES.createGenerator('H1')
-	H2 = NODES.createGenerator('H2')
-	H3 = NODES.createGenerator('H3')
-	H4 = NODES.createGenerator('H4')
-	IFRAME = NODES.createGenerator('IFRAME')
-	BUTTON = NODES.createGenerator('BUTTON')
-	INPUT = NODES.createGenerator('INPUT', { type:'text' })
+_NODES.INPUT = _NODES.createGenerator('INPUT', {
+	'value':function(val) { if (typeof val != 'undefined') { this._el.value = val; return this } else { return this._el.value } },
+	'select':function() { this._el.select(); return this },
+	'focus':function() { this._el.focus(); return this },
+	'blur':function() { this._el.blur(); return this },
+	'disable':function() { this._el.disabled = true; return this },
+	'enable':function() { this._el.disabled = false; return this }
+})
+
+FORM = _NODES.createGenerator('FORM', {
+	'renderContent':function() {
+		_NODES.NODE.prototype.renderContent.apply(this)
+		this.getElement().action = '#'
+		this.append(INPUT({ type:'submit' }).style({ visibility:'hidden', position:'absolute', top:-9999, left:-9999 }))
+	}
+})
+
+
+_NODES.exposeGlobals = function() {
+	TEXT = function() { return new _NODES.TEXT(slice(arguments, 0)) }
+	FRAGMENT = function() { return new _NODES.FRAGMENT(slice(arguments, 0)) }
+	HTML = function() { return new _NODES.HTML(slice(arguments, 0)) }
+	DIV = _NODES.createGenerator('DIV')
+	SPAN = _NODES.createGenerator('SPAN')
+	IMG = _NODES.createGenerator('IMG')
+	A = _NODES.createGenerator('A')
+	P = _NODES.createGenerator('P')
+	H1 = _NODES.createGenerator('H1')
+	H2 = _NODES.createGenerator('H2')
+	H3 = _NODES.createGenerator('H3')
+	H4 = _NODES.createGenerator('H4')
+	UL = _NODES.createGenerator('UL')
+	LI = _NODES.createGenerator('LI')
+	OL = _NODES.createGenerator('OL')
+	IFRAME = _NODES.createGenerator('IFRAME')
+	BUTTON = _NODES.createGenerator('BUTTON')
+	INPUT = _NODES.INPUT
 	PASSWORD = NODES.createGenerator('INPUT', { type:'password' })
-	TEXTAREA = NODES.createGenerator('TEXTAREA')
-	LABEL = NODES.createGenerator('LABEL')
-	return NODES
+	TEXTAREA = _NODES.createGenerator('TEXTAREA')
+	LABEL = _NODES.createGenerator('LABEL')
+	TEXT = _NODES.createGeneratorWithoutClass('SPAN')
+	BR = _NODES.createGenerator('BR')
+	NODES = _NODES
 }

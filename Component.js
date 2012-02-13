@@ -11,24 +11,25 @@ var Class = require('std/Class'),
 	getDocumentOf = require('./getDocumentOf'),
 	getElementOf = require('./getElementOf'),
 	getWindowOf = require('./getWindowOf'),
-	extend = require('std/extend')
+	each = require('std/each'),
+	bind = require('std/bind')
 
 module.exports = Class(Publisher, function() {
 
 	this._tag = 'div'
-	this._class = null
+	this._class = ''
 
 	this.init = function() {
 		Publisher.prototype.init.apply(this)
 	}
 
-	this.render = function(component) {
-		this._render(component)
+	this.render = function(inComponent) {
+		this._render(inComponent)
 		return this
 	}
 
-	this._render = function(component) {
-		var doc = getDocumentOf(component)
+	this._render = function(inComponent) {
+		var doc = getDocumentOf(inComponent)
 		if (this._doc == doc) { return this._el }
 		if (this._el) { this.unrender() }
 
@@ -46,12 +47,14 @@ module.exports = Class(Publisher, function() {
 
 	this.create = function(tag, properties) { return create(tag, properties, this._doc) }
 
-	this.append = function(node) {
-		for (var i=0; i<arguments.length; i++) {
-			var node = arguments[i]
-			this._el.appendChild(getElementOf(node.render ? node.render(this) : node));
-		}
-		return node
+<<<<<<< HEAD
+	this.append = function(/* node1, node2, ... */) {
+		var lastNode
+		each(arguments, this, function(node) {
+			this._el.appendChild(getElementOf(node.render ? node.render(this) : node))
+			lastNode = node
+		})
+		return lastNode
 	}
 	this.appendTo = function(node) { getElementOf(node).appendChild(this._render(node)); return this }
 	this.prepend = function() {
@@ -65,6 +68,11 @@ module.exports = Class(Publisher, function() {
 		else { el.insertBefore(nodeEl, el.childNodes[index]) }
 		return this
 	}
+	this.replaceWith = function(node) {
+		this._el.parentNode.insertBefore(getElementOf(node.render ? node.render(this) : node), this._el);
+		this.remove()
+		return node
+	}
 
 	this.hide = function() { this._el.style.display = 'none'; return this }
 	this.show = function() { this._el.style.display = 'block'; return this }
@@ -72,13 +80,21 @@ module.exports = Class(Publisher, function() {
 	this.on = function(eventName, handler) { return on(this._el, eventName, handler) }
 	this.off = function(eventName, handler) { return off(this._el, eventName, handler) }
 
-	this.addClass = function(className) { addClass(this._el, className); return this }
+	this.addClass = function(className) { (this._el ? addClass(this._el, className) : this._class += (' ' + className)); return this }
 	this.removeClass = function(className) { removeClass(this._el, className); return this }
-	this.toggleClass = function(className, shouldHave) { (shouldHave ? addClass : removeClass)(this._el, className); return this }
+	this.toggleClass = function(className, shouldHave) {
+		if (typeof shouldHave != 'boolean') { shouldHave = !hasClass(this._el, className) }
+		(shouldHave ? addClass : removeClass)(this._el, className)
+		return this
+	}
 	this.hasClass = function(className) { return hasClass(this._el, className) }
 	this.style = function(styles) {
-		if (this._el) { style(this._el, styles) }
-		else { this._styles = extend(this._styles, styles) }
+		if (this._el) {
+			style(this._el, styles)
+		} else {
+			if (!this._styles) { this._styles = {} }
+			each(styles, bind(this, function(val, key) { this._styles[key] = val }))
+		}
 		return this
 	}
 	this.opacity = function(opacity) { style.opacity(this._el, opacity); return this }
@@ -87,8 +103,8 @@ module.exports = Class(Publisher, function() {
 	this.getWidth = function() { return this._el.offsetWidth }
 	this.getHeight = function() { return this._el.offsetHeight }
 
-	this.remove = function() { this._el.parentNode.removeChild(this._el); return this }
+	this.remove = function() { if (this._el.parentNode) { this._el.parentNode.removeChild(this._el); } return this }
 	this.empty = function() { this._el.innerHTML = ''; return this }
-	
+
 	this.text = function(t) { this.empty()._el.appendChild(this._doc.createTextNode(t)); return this }
 })

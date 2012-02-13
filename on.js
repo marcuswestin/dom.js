@@ -60,7 +60,7 @@ module.exports._addListener = function(element, eventName, handler) {
 }
 
 module.exports._handleEvent = function(element, eventName, e) {
-	var eventObj = module.exports._normalizeEvent(eventName, e),
+	var eventObj = module.exports.normalizeEvent(eventName, e),
 		elementMap = module.exports.getElementMap(element),
 		handlers = elementMap[eventName]
 	for (var i=0; i<handlers.length; i++) {
@@ -68,15 +68,17 @@ module.exports._handleEvent = function(element, eventName, e) {
 	}
 }
 
-module.exports._normalizeEvent = function(eventName, e) {
+module.exports.normalizeEvent = function(eventName, e) {
 	e = e || event
 	var eventObj = {
 		keyCode: e.keyCode,
 		metaKey: e.metaKey,
 		target: e.target || e.srcElement,
+		source: e.source, // postmessage
 		origin: e.origin,
 		data: e.data,
-		touches: e.touches
+		touches: e.touches,
+		changedTouches: e.changedTouches
 	}
 
 	if (eventName == 'mousewheel') {
