@@ -15,16 +15,23 @@ _NODES.NODE = Class(Component, function() {
 	this.init = function(args) {
 		// No need to call Component.init - Nodes are not expected to publish
 		this._args = args
+		this._handlers = {}
 	}
 
-	this.on = function(event, handler) {
+	this.on = function(eventName, handler) {
 		if (this._el) {
-			Component.prototype.on.call(this, event, bind(this, handler))
+			Component.prototype.on.call(this, eventName, this._handlers[eventName]=bind(this, handler))
 		} else {
 			var arg = {}
-			arg[event] = handler
+			arg[eventName] = handler
 			this._args.push(arg)
 		}
+		return this
+	}
+	
+	this.off = function(eventName) {
+		Component.prototype.off.call(this, eventName, this._handlers[eventName])
+		delete this._handlers[eventName]
 		return this
 	}
 

@@ -1,7 +1,10 @@
 var Rect = require('std/math/Rect'),
 	curry = require('std/curry'),
+	bind = require('std/bind'),
 	client = require('std/client'),
-	bind = require('std/bind')
+	bind = require('std/bind'),
+	on = require('dom/on'),
+	off = require('dom/off')
 
 module.exports = {
 	withScroll: withScroll,
@@ -24,10 +27,7 @@ function tappable(handlers, tapHandler) {
 			touchend: curry(endTouch, tapHandler),
 			touchcancel: curry(endTouch, tapHandler)
 		} : {
-			click: tapHandler,
-			mousedown: onMouseDown,
-			mouseup: setInactive,
-			mouseout: setInactive
+			mousedown: curry(onMouseDown, tapHandler)
 		})
 }
 
@@ -107,11 +107,28 @@ function clearState() {
 	delete this.__activeDelayTimeout
 }
 
-function onMouseDown(e) {
+function onMouseDown(tapHandler, e) {
 	e.cancel()
+	this.__tappableMouseUpHandler = tapHandler
+	on(document, 'mouseup', bind(this, _onMouseUp))
+	this.on('mouseout', _onMouseOut)
+	this.on('mouseover', _onMouseOver)
 	this.addClass('active')
 }
 
-function setInactive() {
+function _onMouseOut() {
 	this.removeClass('active')
+}
+
+function _onMouseOver() {
+	this.addClass('active')
+}
+
+function _onMouseUp(e) {
+	var tapHandler = this.__tappableMouseUpHandler
+	delete this.__tappableMouseUpHandler
+	this.off('mouseout', _onMouseOut)
+	this.off('mouseover', _onMouseOver)
+	off(document, 'mouseup', this.__tappableMouseUpHandler)
+	if (this.hasClass('active')) { tapHandler() }
 }
