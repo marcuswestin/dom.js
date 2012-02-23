@@ -84,7 +84,7 @@ function endTouch(tapHandler, e) {
 	if (e.changedTouches.length > 1) { return }
 	e.cancel()
 	setTimeout(bind(this, function() { // Give the scroll event a chance to happen
-		if (gLastScroll && (new Date().getTime() - gLastScroll < 100)) {
+		if (window.gLastScroll && (new Date().getTime() - gLastScroll < 100)) {
 			gLastScroll = null
 			clearState.call(this)
 			this.removeClass('active')
