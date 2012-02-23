@@ -1,4 +1,4 @@
-var on = require('dom/on'),
+var on = require('./on'),
 	each = require('std/each'),
 	invokeWith = require('std/invokeWith')
 

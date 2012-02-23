@@ -3,8 +3,8 @@ var Rect = require('std/math/Rect'),
 	bind = require('std/bind'),
 	client = require('std/client'),
 	bind = require('std/bind'),
-	on = require('dom/on'),
-	off = require('dom/off')
+	on = require('../on'),
+	off = require('../off')
 
 module.exports = withoutScroll
 
