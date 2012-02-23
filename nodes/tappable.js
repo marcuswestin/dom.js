@@ -6,16 +6,20 @@ var Rect = require('std/math/Rect'),
 	on = require('dom/on'),
 	off = require('dom/off')
 
-module.exports = {
-	withScroll: withScroll,
-	withoutScroll: withoutScroll
-}
+module.exports = withoutScroll
 
-function withScroll(tapHandler) {
+module.exports.withScroll = withScroll
+module.exports.withoutScroll = withoutScroll // backcompat
+
+function withScroll(ctx, tapHandler) {
+	if (ctx && !tapHandler) { tapHandler = ctx }
+	else { tapHandler = bind(ctx, tapHandler) }
 	return tappable(allowScroll, tapHandler)
 }
 
-function withoutScroll(tapHandler) {
+function withoutScroll(ctx, tapHandler) {
+	if (ctx && !tapHandler) { tapHandler = ctx }
+	else { tapHandler = bind(ctx, tapHandler) }
 	return tappable(preventScroll, tapHandler)
 }
 
