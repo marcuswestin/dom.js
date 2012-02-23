@@ -12,14 +12,12 @@ module.exports.withScroll = withScroll
 module.exports.withoutScroll = withoutScroll // backcompat
 
 function withScroll(ctx, tapHandler) {
-	if (ctx && !tapHandler) { tapHandler = ctx }
-	else { tapHandler = bind(ctx, tapHandler) }
+	if (arguments.length > 1) { tapHandler = bind.apply(this, arguments) }
 	return tappable(allowScroll, tapHandler)
 }
 
-function withoutScroll(ctx, tapHandler) {
-	if (ctx && !tapHandler) { tapHandler = ctx }
-	else { tapHandler = bind(ctx, tapHandler) }
+function withoutScroll(tapHandler) {
+	if (arguments.length > 1) { tapHandler = bind.apply(this, arguments) }
 	return tappable(preventScroll, tapHandler)
 }
 
