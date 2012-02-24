@@ -132,5 +132,6 @@ function _onMouseUp(e) {
 	this.off('mouseout', _onMouseOut)
 	this.off('mouseover', _onMouseOver)
 	off(document, 'mouseup', this.__tappableMouseUpHandler)
-	if (this.hasClass('active')) { tapHandler() }
+	if (this.hasClass('active')) { tapHandler(e) }
+	this.removeClass('active')
 }
