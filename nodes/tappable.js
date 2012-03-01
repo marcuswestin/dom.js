@@ -89,7 +89,7 @@ function endTouch(tapHandler, e) {
 			return;
 		}
 		var touch = e.changedTouches[0],
-			shouldTap = (this.__touchRect.containsPoint({ x:touch.pageX, y:touch.pageY }))
+			shouldTap = (this.__touchRect.containsPoint({ x:touch.pageX, y:touch.pageY }) && !this.hasClass('disabled'))
 		setTimeout(bind(this, this.removeClass, 'active'), 200)
 		if (shouldTap && !this.hasClass('active')) {
 			this.addClass('active')
@@ -132,6 +132,6 @@ function _onMouseUp(e) {
 	this.off('mouseout', _onMouseOut)
 	this.off('mouseover', _onMouseOver)
 	off(document, 'mouseup', this.__tappableMouseUpHandler)
-	if (this.hasClass('active')) { tapHandler(e) }
+	if (this.hasClass('active') && !this.hasClass('disabled')) { tapHandler(e) }
 	this.removeClass('active')
 }
