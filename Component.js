@@ -50,6 +50,7 @@ module.exports = Class(Publisher, function() {
 	this.append = function(/* node1, node2, ... */) {
 		var lastNode
 		each(arguments, this, function(node) {
+			if (!node) { return }
 			this._el.appendChild(getElementOf(node.render ? node.render(this) : node))
 			lastNode = node
 		})
