@@ -29,12 +29,14 @@ module.exports = Class(Publisher, function() {
 	}
 
 	this._render = function(inComponent) {
-		var doc = getDocumentOf(inComponent)
-		if (this._doc == doc) { return this._el }
+		var doc = getDocumentOf(inComponent),
+			isElement = (inComponent instanceof Element)
+		
+		if (this._doc == doc && !isElement) { return this._el }
 		if (this._el) { this.unrender() }
-
+		
 		this._doc = doc
-		this._el = doc.createElement(this._tag)
+		this._el = isElement ? inComponent : doc.createElement(this._tag)
 		if (this._class) { this._el.className = this._class }
 		if (this._styles) { this.style(this._styles); delete this._styles }
 		if (this.renderContent) { this.renderContent() }
