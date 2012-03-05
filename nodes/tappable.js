@@ -94,10 +94,10 @@ function endTouch(tapHandler, e) {
 		if (shouldTap && !this.hasClass('active')) {
 			this.addClass('active')
 			clearState.call(this)
-			if (shouldTap) { setTimeout(tapHandler, 0) }
+			if (shouldTap) { setTimeout(bind(this, tapHandler), 0) }
 		} else {
 			clearState.apply(this)
-			if (shouldTap) { tapHandler() }
+			if (shouldTap) { tapHandler.call(this) }
 		}
 		
 	}), 50)
@@ -132,6 +132,6 @@ function _onMouseUp(e) {
 	this.off('mouseout', _onMouseOut)
 	this.off('mouseover', _onMouseOver)
 	off(document, 'mouseup', this.__tappableMouseUpHandler)
-	if (this.hasClass('active') && !this.hasClass('disabled')) { tapHandler(e) }
+	if (this.hasClass('active') && !this.hasClass('disabled')) { tapHandler.call(this, e) }
 	this.removeClass('active')
 }
