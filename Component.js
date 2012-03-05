@@ -24,19 +24,18 @@ module.exports = Class(Publisher, function() {
 	}
 
 	this.render = function(inComponent) {
-		this._render(inComponent)
+		this._render(inComponent, getDocumentOf(inComponent))
 		return this
 	}
 
-	this._render = function(inComponent) {
-		var doc = getDocumentOf(inComponent),
-			isElement = (inComponent instanceof Element)
-		
-		if (this._doc == doc && !isElement) { return this._el }
+	this._render = function(inComponent, inDocument) {
+		var isElement = (inComponent instanceof Element)
+
+		if (this._doc == inDocument && !isElement) { return this._el }
 		if (this._el) { this.unrender() }
 		
-		this._doc = doc
-		this._el = isElement ? inComponent : doc.createElement(this._tag)
+		this._doc = inDocument
+		this._el = isElement ? inComponent : this._doc.createElement(this._tag)
 		if (this._class) { this._el.className = this._class }
 		if (this._styles) { this.style(this._styles); delete this._styles }
 		if (this.renderContent) { this.renderContent() }
@@ -58,7 +57,7 @@ module.exports = Class(Publisher, function() {
 		})
 		return lastNode
 	}
-	this.appendTo = function(node) { getElementOf(node).appendChild(this._render(node)); return this }
+	this.appendTo = function(node) { getElementOf(node).appendChild(this._render(null, getDocumentOf(node))); return this }
 	this.prepend = function() {
 		for (var i=0; i<arguments.length; i++) { this.insert(arguments[i], i) }
 		return this
