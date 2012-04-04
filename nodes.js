@@ -91,6 +91,8 @@ _NODES.NODE = Class(Component, function() {
 			node.appendChild(arg)
 		} else if (isArray(arg)) {
 			this._processArgs(arg, 0)
+		} else if (typeof arg == 'function') {
+			arg.call(this)
 		} else {
 			each(arg, this, function(val, key) {
 				if (this.attributeHandlers[key]) {
