@@ -10,6 +10,7 @@ module.exports = {
 	updateData:updateData,
 	observe:observe,
 	push:push,
+	pop:pop,
 	replace:replace
 }
 
@@ -22,6 +23,12 @@ function replace(hash) {
 function push(component) {
 	var hash = get()
 	set(hash ? hash+'/'+component : component)
+}
+
+function pop() {
+	var parts = get().split('/')
+	parts.pop()
+	set(parts.join('/'))
 }
 
 function get() {
