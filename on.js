@@ -68,6 +68,10 @@ var charCodes = {
 	'r': 114
 }
 
+var keyCodes = {
+	'tab': 9
+}
+
 var eventBase = {
 	cancel: function() {
 		var e = this.domEvent
@@ -81,6 +85,9 @@ var eventBase = {
 	isRefresh: function() {
 		var e = this.domEvent
 		return e.type == 'keypress' && e.metaKey && e.charCode == charCodes['r']
+	},
+	isTab: function() {
+		return this.keyCode == keyCodes['tab']
 	},
 	_normalizeMouseWheel: function(eventName) {
 		if (eventName != 'mousewheel') { return }
