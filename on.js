@@ -59,7 +59,7 @@ module.exports._handleEvent = function(element, eventName, e) {
 		elementMap = module.exports.getElementMap(element),
 		handlers = elementMap[eventName]
 	for (var i=0; i<handlers.length; i++) {
-		handlers[i](eventObj)
+		handlers[i].call(element, eventObj)
 	}
 }
 
