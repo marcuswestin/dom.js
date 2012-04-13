@@ -69,7 +69,9 @@ var charCodes = {
 }
 
 var keyCodes = {
-	'tab': 9
+	'tab': 9,
+	'backspace': 8,
+	'return': 13
 }
 
 var eventBase = {
@@ -88,6 +90,12 @@ var eventBase = {
 	},
 	isTab: function() {
 		return this.keyCode == keyCodes['tab']
+	},
+	isBackspace:function() {
+		return this.keyCode == keyCodes['backspace']
+	},
+	isReturn:function() {
+		return this.keyCode == keyCodes['return']
 	},
 	_normalizeMouseWheel: function(eventName) {
 		if (eventName != 'mousewheel') { return }
