@@ -1,11 +1,12 @@
-var on = require('dom/on'),
-	off = require('dom/off'),
+window.onerror = function(e) { alert('error ' + e) }
+var on = require('./on'),
+	off = require('./off'),
 	curry = require('std/curry'),
 	Rect = require('std/math/Rect'),
-	getOffset = require('dom/getOffset'),
-	addClass = require('dom/addClass'),
-	removeClass = require('dom/removeClass'),
-	hasClass = require('dom/hasClass'),
+	getOffset = require('./getOffset'),
+	addClass = require('./addClass'),
+	removeClass = require('./removeClass'),
+	hasClass = require('./hasClass'),
 	each = require('std/each')
 
 module.exports = {

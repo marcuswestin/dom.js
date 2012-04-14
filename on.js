@@ -3,8 +3,8 @@ var unique = require('std/unique'),
 	client = require('std/client'),
 	getWindowScroll = require('./getWindowScroll'),
 	proto = require('std/proto'),
-	getAttribute = require('dom/getAttribute'),
-	setAttribute = require('dom/setAttribute')
+	getAttribute = require('./getAttribute'),
+	setAttribute = require('./setAttribute')
 
 module.exports = function on(element, eventName, handler) {
 	var uniqueID = module.exports.stampElement(element),
