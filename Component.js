@@ -24,20 +24,21 @@ module.exports = Class(Publisher, function() {
 	}
 
 	this.render = function(inComponent) {
-		this._render(inComponent)
+		this._render(inComponent, getDocumentOf(inComponent))
 		return this
 	}
 
-	this._render = function(inComponent) {
-		var doc = getDocumentOf(inComponent)
-		if (this._doc == doc) { return this._el }
-		if (this._el) { this.unrender() }
+	this._render = function(inComponent, inDocument) {
+		var isElement = (inComponent instanceof Element)
 
-		this._doc = doc
-		this._el = doc.createElement(this._tag)
+		if (this._doc == inDocument && !isElement) { return this._el }
+		if (this._el) { this.unrender() }
+		
+		this._doc = inDocument
+		this._el = isElement ? inComponent : this._doc.createElement(this._tag)
 		if (this._class) { this._el.className = this._class }
-		if (this._styles) { this.style(this._styles); delete this._styles }
 		if (this.renderContent) { this.renderContent() }
+		if (this._styles) { this.style(this._styles); delete this._styles }
 		return this._el
 	}
 
@@ -50,12 +51,13 @@ module.exports = Class(Publisher, function() {
 	this.append = function(/* node1, node2, ... */) {
 		var lastNode
 		each(arguments, this, function(node) {
+			if (!node) { return }
 			this._el.appendChild(getElementOf(node.render ? node.render(this) : node))
 			lastNode = node
 		})
 		return lastNode
 	}
-	this.appendTo = function(node) { getElementOf(node).appendChild(this._render(node)); return this }
+	this.appendTo = function(node) { getElementOf(node).appendChild(this._render(null, getDocumentOf(node))); return this }
 	this.prepend = function() {
 		for (var i=0; i<arguments.length; i++) { this.insert(arguments[i], i) }
 		return this
@@ -103,7 +105,7 @@ module.exports = Class(Publisher, function() {
 	this.getHeight = function() { return this._el.offsetHeight }
 
 	this.remove = function() { if (this._el.parentNode) { this._el.parentNode.removeChild(this._el); } return this }
-	this.empty = function() { this._el.innerHTML = ''; return this }
+	this.empty = function() { if (this._el) { this._el.innerHTML = ''; } return this }
 
 	this.text = function(t) { this.empty()._el.appendChild(this._doc.createTextNode(t)); return this }
 })

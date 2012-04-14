@@ -1,18 +1,23 @@
 var Rect = require('std/math/Rect'),
 	curry = require('std/curry'),
+	bind = require('std/bind'),
 	client = require('std/client'),
-	bind = require('std/bind')
+	bind = require('std/bind'),
+	on = require('../on'),
+	off = require('../off')
 
-module.exports = {
-	withScroll: withScroll,
-	withoutScroll: withoutScroll
-}
+module.exports = withoutScroll
+
+module.exports.withScroll = withScroll
+module.exports.withoutScroll = withoutScroll // backcompat
 
 function withScroll(tapHandler) {
+	if (arguments.length > 1) { tapHandler = bind.apply(this, arguments) }
 	return tappable(allowScroll, tapHandler)
 }
 
 function withoutScroll(tapHandler) {
+	if (arguments.length > 1) { tapHandler = bind.apply(this, arguments) }
 	return tappable(preventScroll, tapHandler)
 }
 
@@ -24,10 +29,7 @@ function tappable(handlers, tapHandler) {
 			touchend: curry(endTouch, tapHandler),
 			touchcancel: curry(endTouch, tapHandler)
 		} : {
-			click: tapHandler,
-			mousedown: onMouseDown,
-			mouseup: setInactive,
-			mouseout: setInactive
+			mousedown: curry(onMouseDown, tapHandler)
 		})
 }
 
@@ -80,22 +82,22 @@ function endTouch(tapHandler, e) {
 	if (e.changedTouches.length > 1) { return }
 	e.cancel()
 	setTimeout(bind(this, function() { // Give the scroll event a chance to happen
-		if (gLastScroll && (new Date().getTime() - gLastScroll < 100)) {
+		if (window.gLastScroll && (new Date().getTime() - gLastScroll < 100)) {
 			gLastScroll = null
 			clearState.call(this)
 			this.removeClass('active')
 			return;
 		}
 		var touch = e.changedTouches[0],
-			shouldTap = (this.__touchRect.containsPoint({ x:touch.pageX, y:touch.pageY }))
+			shouldTap = (this.__touchRect.containsPoint({ x:touch.pageX, y:touch.pageY }) && !this.hasClass('disabled'))
 		setTimeout(bind(this, this.removeClass, 'active'), 200)
 		if (shouldTap && !this.hasClass('active')) {
 			this.addClass('active')
 			clearState.call(this)
-			if (shouldTap) { setTimeout(tapHandler, 0) }
+			if (shouldTap) { setTimeout(bind(this, tapHandler), 0) }
 		} else {
 			clearState.apply(this)
-			if (shouldTap) { tapHandler() }
+			if (shouldTap) { tapHandler.call(this) }
 		}
 		
 	}), 50)
@@ -107,11 +109,29 @@ function clearState() {
 	delete this.__activeDelayTimeout
 }
 
-function onMouseDown(e) {
+function onMouseDown(tapHandler, e) {
 	e.cancel()
+	this.__tappableMouseUpHandler = tapHandler
+	on(document, 'mouseup', bind(this, _onMouseUp))
+	this.on('mouseout', _onMouseOut)
+	this.on('mouseover', _onMouseOver)
 	this.addClass('active')
 }
 
-function setInactive() {
+function _onMouseOut() {
+	this.removeClass('active')
+}
+
+function _onMouseOver() {
+	this.addClass('active')
+}
+
+function _onMouseUp(e) {
+	var tapHandler = this.__tappableMouseUpHandler
+	delete this.__tappableMouseUpHandler
+	this.off('mouseout', _onMouseOut)
+	this.off('mouseover', _onMouseOver)
+	off(document, 'mouseup', this.__tappableMouseUpHandler)
+	if (this.hasClass('active') && !this.hasClass('disabled')) { tapHandler.call(this, e) }
 	this.removeClass('active')
 }

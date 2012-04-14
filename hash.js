@@ -1,4 +1,4 @@
-var on = require('dom/on'),
+var on = require('./on'),
 	each = require('std/each'),
 	invokeWith = require('std/invokeWith')
 
@@ -10,17 +10,25 @@ module.exports = {
 	updateData:updateData,
 	observe:observe,
 	push:push,
+	pop:pop,
 	replace:replace
 }
 
 function replace(hash) {
 	var locationWithoutHash = location.toString().split('#')[0]
 	location.replace(locationWithoutHash + '#' + hash)
+	onHashChange()
 }
 
 function push(component) {
 	var hash = get()
 	set(hash ? hash+'/'+component : component)
+}
+
+function pop() {
+	var parts = get().split('/')
+	parts.pop()
+	set(parts.join('/'))
 }
 
 function get() {
@@ -30,6 +38,7 @@ function get() {
 
 function set(hash) {
 	location.hash = '#'+hash
+	onHashChange()
 }
 
 function getData() {
@@ -58,17 +67,21 @@ function observe(callback) {
 	callback(get())
 }
 
+var lastHash = get()
 function onHashChange() {
+	var hash = get()
+	if (hash == lastHash) { return }
+	lastHash = hash
 	each(observers, invokeWith(get()))
 }
 
 if ('onhashchange' in window) {
 	on(window, 'hashchange', onHashChange)
 } else {
-	var lastHash = get()
+	var lastIntervalHash = get()
 	setInterval(function() {
-		if (get() == lastHash) { return }
-		lastHash = get()
+		if (get() == lastIntervalHash) { return }
+		lastIntervalHash = get()
 		onHashChange()
 	}, 200)
 }

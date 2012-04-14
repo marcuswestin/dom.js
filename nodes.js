@@ -15,16 +15,23 @@ _NODES.NODE = Class(Component, function() {
 	this.init = function(args) {
 		// No need to call Component.init - Nodes are not expected to publish
 		this._args = args
+		this._handlers = {}
 	}
 
-	this.on = function(event, handler) {
+	this.on = function(eventName, handler) {
 		if (this._el) {
-			Component.prototype.on.call(this, event, bind(this, handler))
+			Component.prototype.on.call(this, eventName, this._handlers[eventName]=bind(this, handler))
 		} else {
 			var arg = {}
-			arg[event] = handler
+			arg[eventName] = handler
 			this._args.push(arg)
 		}
+		return this
+	}
+	
+	this.off = function(eventName) {
+		Component.prototype.off.call(this, eventName, this._handlers[eventName])
+		delete this._handlers[eventName]
 		return this
 	}
 
@@ -77,13 +84,15 @@ _NODES.NODE = Class(Component, function() {
 		var node = this._el,
 			doc = this._doc
 		if (typeof arg._render == 'function') {
-			node.appendChild(arg._render(doc))
+			node.appendChild(arg._render(null, doc))
 		} else if (typeof arg == 'string' || typeof arg == 'number') {
 			node.appendChild(doc.createTextNode(arg))
 		} else if (arg.nodeType && arg.nodeType == 1) { // http://stackoverflow.com/questions/120262/whats-the-best-way-to-detect-if-a-given-javascript-object-is-a-dom-element
 			node.appendChild(arg)
 		} else if (isArray(arg)) {
 			this._processArgs(arg, 0)
+		} else if (typeof arg == 'function') {
+			arg.call(this)
 		} else {
 			each(arg, this, function(val, key) {
 				if (this.attributeHandlers[key]) {
@@ -110,7 +119,7 @@ _NODES.NODE = Class(Component, function() {
 })
 
 _NODES.TEXT = Class(_NODES.NODE, function() {
-	this._render = function(doc) {
+	this._render = function(el, doc) {
 		var args = this._args,
 			text = args.length > 1 ? slice(args).join(' ') : args[0]
 		return doc.createTextNode(text)
@@ -118,7 +127,7 @@ _NODES.TEXT = Class(_NODES.NODE, function() {
 })
 
 _NODES.HTML = Class(_NODES.NODE, function() {
-	this._render = function(doc) {
+	this._render = function(el, doc) {
 		var args = this._args,
 			html = args.length > 1 ? slice(args).join(' ') : args[0],
 			fragment = doc.createElement('span')
