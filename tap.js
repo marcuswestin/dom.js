@@ -58,7 +58,7 @@ var withScroll = {
 	},
 	onTouchEnd: function(el, e) {
 		if (touchInsideTapRect(el, e)) { setActive(el) }
-		onEnd(el, e)
+		setTimeout(curry(onEnd, el, e, false), 50) // give withScroll.onScroll a chance to happen
 	},
 	getScrollingEl: function(el) {
 		var scrollingEl = el.parentNode
@@ -66,6 +66,7 @@ var withScroll = {
 			scrollingEl = scrollingEl.parentNode
 		}
 		if (!scrollingEl) { return document }
+		return scrollingEl
 	}
 }
 
