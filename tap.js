@@ -29,8 +29,8 @@ function tappableListItem(element, handler) {
 }
 
 var withScroll = {
-	onTouchStart: function(el, handler, e) {
-		var scrollingEl = withScroll.getScrollingEl(el)
+	onTouchStart: function(el, handler, e, scrollerClassName) {
+		var scrollingEl = withScroll.getScrollingEl(el, scrollerClassName)
 		
 		var state = initTapState(el, handler, e)
 		
@@ -60,9 +60,10 @@ var withScroll = {
 		if (touchInsideTapRect(el, e)) { setActive(el) }
 		setTimeout(curry(onEnd, el, e, false), 50) // give withScroll.onScroll a chance to happen
 	},
-	getScrollingEl: function(el) {
+	getScrollingEl: function(el, scrollerClassName) {
+		if (!scrollerClassName) { return document }
 		var scrollingEl = el.parentNode
-		while(scrollingEl && !hasClass(scrollingEl, 'tap-list-scroller')) {
+		while(scrollingEl && !hasClass(scrollingEl, scrollerClassName)) {
 			scrollingEl = scrollingEl.parentNode
 		}
 		if (!scrollingEl) { return document }
