@@ -7,8 +7,6 @@
     "type": "git",
     "url": "git://github.com/marcuswestin/dom.js.git"
   },
-  "dependencies": {
-	"std": "0.1.x"
-  },
+  "dependencies": {},
   "devDependencies": {}
 }
