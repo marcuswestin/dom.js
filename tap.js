@@ -43,7 +43,7 @@ var withScroll = {
 		
 		state.tapSetActiveTimeout = setTimeout(function() { setActive(el) }, withScroll.delayUntilActive)
 	},
-	delayUntilActive: 150,
+	delayUntilActive: 125,
 	onTouchMove: function(el, e) {
 		var touch = e.touches[0],
 			state = on.getElementMap(el)
