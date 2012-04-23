@@ -1,4 +1,3 @@
-window.onerror = function(e) { alert('error ' + e) }
 var on = require('./on'),
 	off = require('./off'),
 	curry = require('std/curry'),
