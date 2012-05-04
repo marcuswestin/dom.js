@@ -49,6 +49,7 @@ var scroller = {
 		this._scroll()
 	},
 	_scroll:function() {
-		$(this._slider).css('-webkit-transform', 'translateX('+(-this.stack.length * viewport.width())+'px)')
+		var offset = this.stack.length - 1
+		$(this._slider).css('-webkit-transform', 'translateX('+(-offset * viewport.width())+'px)')
 	}
 }
