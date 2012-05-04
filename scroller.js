@@ -13,11 +13,11 @@ var scroller = {
 	renderBody:function(numViews, renderBodyContent) {
 		this.renderBodyContent = renderBodyContent
 		var viewportSize = viewport.getSize()
-		var contentSize = style({ height:viewport.height()-this.headHeight, widht:viewport.width() })
+		var contentSize = style({ height:viewport.height()-this.headHeight, width:viewport.width() })
 		var crop = style({ overflowX:'hidden' })
 		var scrollable = style({ 'overflow-y':'scroll', '-webkit-overflow-scrolling':'touch' })
 		var floating = style({ 'float':'left' })
-		var sliderStyle = style({
+		var slider = style({
 			height:viewport.height() - this.headHeight,
 			width:viewport.width() * numViews,
 			'-webkit-transition':'-webkit-transform 0.70s',
@@ -26,7 +26,7 @@ var scroller = {
 		
 		this.body=div('scroller-body', style({ position:'absolute', top:this.headHeight, overflowX:'hidden' }),
 			div('scroller-overflow', contentSize, crop,
-				this._slider=div('scroller-slider', style(sliderStyle),
+				this._slider=div('scroller-slider', slider,
 					this._views=map(new Array(numViews), function() {
 						return div('scroller-view', contentSize, crop, floating, scrollable)
 					})
