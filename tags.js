@@ -41,6 +41,17 @@
 			}
 			return this
 		},
+		prepend:function prepend(tag) {
+			var el = this.el
+			var children = el.children
+			tag = tag._renderTag ? tag._renderTag() : tag
+			if (children.length) {
+				el.insertBefore(tag, children[0])
+			} else {
+				el.appendChild(tag)
+			}
+			return this
+		},
 		empty:function empty() {
 			if (this.el) { this.el.innerHTML = '' }
 			return this
