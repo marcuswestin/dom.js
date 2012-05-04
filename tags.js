@@ -84,12 +84,10 @@
 				for (var key in arg) {
 					if (!arg.hasOwnProperty(key)) { continue }
 					var val = arg[key]
-					if (key == 'for') {
-						el.setAttribute(key, val)
-					} else if (key == 'style') {
+					if (key == 'style') {
 						for (var styleKey in val) { setStyle(el, styleKey, val[styleKey]) }
 					} else {
-						el[key] = val
+						el.setAttribute(key, val)
 					}
 				}
 			}
