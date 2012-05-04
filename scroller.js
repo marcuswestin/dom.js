@@ -27,7 +27,7 @@ var scroller = {
 		this.body=div('scroller-body', style({ position:'absolute', top:this.headHeight, overflowX:'hidden' }),
 			div('scroller-overflow', contentSize, crop,
 				this._slider=div('scroller-slider', slider,
-					this._views=map(new Array(numViews), function() {
+					this.views=map(new Array(numViews), function() {
 						return div('scroller-view', contentSize, crop, floating, scrollable)
 					})
 				)
@@ -36,16 +36,23 @@ var scroller = {
 		this.push({})
 		return this.body
 	},
-	push:function(view) {
-		this.stack.push(view)
-		this.head.empty().append(this.renderHeadContent(view))
-		this._views[this.stack.length - 1].empty().append(this.renderBodyContent(view))
+	push:function(newView) {
+		var views = this.views
+		var stack = this.stack
+		var viewBelow = views[stack.length - 1]
+		this.stack.push(newView)
+		this.head.empty().append(this.renderHeadContent(newView, viewBelow))
+		views[this.stack.length - 1].empty().append(this.renderBodyContent(newView, viewBelow))
 		this._scroll()
 	},
 	pop:function() {
 		var stack = this.stack
-		stack[stack.length - 1].remove()
-		stack.pop()
+		var fromView = stack.pop()
+		var currentView = stack[stack.length - 1]
+		var viewBelow = stack[stack.length - 2]
+		this.views[this.stack.length].empty()
+		this.head.empty().append(this.renderHeadContent(currentView, viewBelow, fromView))
+		
 		this._scroll()
 	},
 	_scroll:function() {
