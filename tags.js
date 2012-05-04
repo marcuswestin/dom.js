@@ -46,7 +46,7 @@
 			return this
 		},
 		remove:function remove() {
-			this.el.parentNode.removeChild(this.el)
+			if (this.el) { this.el.parentNode.removeChild(this.el) }
 			return this
 		},
 		_renderTag:function _renderTag() {
