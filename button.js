@@ -51,8 +51,7 @@ var withoutScroll = {
 	onTouchMove: function(event) {
 		event.preventDefault()
 		var $el = $(this)
-		
-		if (touchInsideTapRect($el)) { setActive($el) }
+		if (touchInsideTapRect($el, event)) { setActive($el) }
 		else { setInactive($el) }
 	},
 	onTouchCancel: function(event) {
@@ -76,7 +75,7 @@ var withoutScroll = {
 		event.preventDefault()
 		
 		var offset = $el.offset()
-		$el.data('touchRect', new Rect(offset.left, offset.top, offset.width, offset.height).pad(12))
+		$el.data('touchRect', new Rect(offset.left, offset.top, $el.width(), $el.height()).pad(22))
 		
 		setActive($el)
 		cb.call(event.target, $el)
@@ -85,3 +84,9 @@ var withoutScroll = {
 
 $(document).on('touchstart', '.button', withoutScroll.onTouchStart)
 $(document).on('mousedown', '.button', withoutScroll.onMouseDown)
+
+var touchInsideTapRect = function($el, event) {
+	var touch = event.originalEvent.touches[0]
+	var touchRect = $el.data('touchRect')
+	return touchRect.containsPoint({ x:touch.pageX, y:touch.pageY })
+}
