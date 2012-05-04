@@ -8,7 +8,7 @@ module.exports = {
 function fit() {
 	var el = this
 	var resize = function() {
-		$(el).height(height()).width(width())
+		$(el).height(viewport.height()).width(viewport.width())
 	}
 	$win.resize(resize)
 	resize()
