@@ -34,7 +34,7 @@
 			return this
 		},
 		append:function append() {
-			if (this._el) {
+			if (this.el) {
 				this._processArgs(arguments, 0)
 			} else {
 				this._args = this._args.concat(slice(arguments))
@@ -42,19 +42,23 @@
 			return this
 		},
 		empty:function empty() {
-			this._el.innerHTML = ''
+			if (this.el) { this.el.innerHTML = '' }
+			return this
+		},
+		remove:function remove() {
+			this.el.parentNode.removeChild(this.el)
 			return this
 		},
 		_renderTag:function _renderTag() {
-			this._el = document.createElement(this._tag)
+			this.el = document.createElement(this._tag)
 			var args = this._args
 			var index = 0
 			if (typeof args[0] == 'string') {
-				this._el.className = args[0]
+				this.el.className = args[0]
 				index = 1
 			}
 			this._processArgs(this._args, index)
-			return this._el
+			return this.el
 		},
 		_processArgs:function _processArgs(args, index) {
 			while (index < args.length) {
@@ -63,7 +67,7 @@
 		},
 		_processArg:function _processArg(arg) {
 			if (arg == null) { return } // null & undefined
-			var el = this._el
+			var el = this.el
 			var type = typeof arg
 			if (arg._renderTag) {
 				el.appendChild(arg._renderTag())
