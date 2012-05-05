@@ -10,7 +10,7 @@ var button = module.exports = function button(data, callback) {
 		} else {
 			dataMap[id] = { cb:data }
 		}
-		$(this).addClass('button').attr('button-id', id)
+		$(this).attr('button-id', id)
 	}
 }
 
