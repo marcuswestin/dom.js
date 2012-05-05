@@ -25,7 +25,8 @@
 				return container
 			})
 			global.style = tags.style
-		}
+		},
+		enableJQueryTags: enableJQueryTags
 	}
 	
 	var tagPrototype = {
@@ -122,4 +123,17 @@
 	if (typeof module != 'undefined' && typeof module != 'function') { module.exports = tags }
 	else if (typeof define === 'function' && define.amd) { define(tags) }
 	else { this.tags = tags }
+
+	function enableJQueryTags() {
+		var originalInit = jQuery.fn.init
+		jQuery.fn.init = function() {
+			var selector = arguments[0]
+			if (selector && selector._renderTag) {
+				arguments[0] = selector.el
+			}
+			return oldInit.apply(this, arguments)
+		}
+		jQuery.fn.init.prototype = originalInit.prototype
+		
+	}
 })()
