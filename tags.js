@@ -35,12 +35,10 @@
 			return this
 		},
 		append:function append() {
-			if (this.el) {
-				this._processArgs(arguments, 0)
-			} else {
-				this._args = this._args.concat(slice(arguments))
-			}
-			return this
+			var args = arguments
+			if (this.el) { this._processArgs(args, 0) }
+			else { this._args = this._args.concat(slice(args)) }
+			return args[args.length - 1]
 		},
 		prepend:function prepend(tag) {
 			var el = this.el
