@@ -10,9 +10,15 @@ var button = module.exports = function button(data, callback) {
 		} else {
 			dataMap[id] = { cb:data }
 		}
-		$(this).attr('button-id', id)
+		$(this).attr('button-id', id).addClass(button.className)
 	}
 }
+button.className = 'dom-buttom'
+
+$(function() {
+	$(document).on('touchstart', '.'+button.className, buttons.onTouchStart)
+	$(document).on('mousedown', '.'+button.className, buttons.onMouseDown)
+})
 
 var onEnd = function(event, supressHandler) {
 	event.preventDefault()
@@ -40,12 +46,12 @@ function isActive($el) { return $el.hasClass('active') }
 function setElInactive() { return setInactive($(this)) }
 function setElActive() { return setActive($(this)) }
 
-var withoutScroll = {
+var buttons = {
 	onTouchStart: function(event) {
-		withoutScroll.init(event, function($el) {
-			$el.on('touchmove', withoutScroll.onTouchMove)
+		buttons.init(event, function($el) {
+			$el.on('touchmove', buttons.onTouchMove)
 			$el.on('touchend', onEnd)
-			$el.on('touchcancel', withoutScroll.onTouchCancel)
+			$el.on('touchcancel', buttons.onTouchCancel)
 		})
 	},
 	onTouchMove: function(event) {
@@ -58,7 +64,7 @@ var withoutScroll = {
 		onEnd.call(this, event, true)
 	},
 	onMouseDown: function(handler, e) {
-		withoutScroll.init(event, function($el) {
+		buttons.init(event, function($el) {
 			$el.on('mouseout', setElInactive)
 			$el.on('mouseover', setElActive)
 			var el = this, handler
@@ -81,9 +87,6 @@ var withoutScroll = {
 		cb.call(event.target, $el)
 	}
 }
-
-$(document).on('touchstart', '.button', withoutScroll.onTouchStart)
-$(document).on('mousedown', '.button', withoutScroll.onMouseDown)
 
 var touchInsideTapRect = function($el, event) {
 	var touch = event.originalEvent.touches[0]
