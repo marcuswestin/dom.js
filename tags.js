@@ -131,7 +131,7 @@
 			if (selector && selector._renderTag) {
 				arguments[0] = selector.el
 			}
-			return oldInit.apply(this, arguments)
+			return originalInit.apply(this, arguments)
 		}
 		jQuery.fn.init.prototype = originalInit.prototype
 		
