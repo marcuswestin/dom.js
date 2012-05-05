@@ -41,8 +41,8 @@ var scroller = {
 		var stack = this.stack
 		var viewBelow = views[stack.length - 1]
 		this.stack.push(newView)
-		this.head.empty().append(this.renderHeadContent(newView, viewBelow))
-		views[this.stack.length - 1].empty().append(this.renderBodyContent(newView, viewBelow))
+		this.renderHeadContent(this.head.empty(), newView, viewBelow)
+		this.renderBodyContent(views[this.stack.length - 1].empty(), newView, viewBelow)
 		this._scroll()
 	},
 	pop:function() {
@@ -50,7 +50,7 @@ var scroller = {
 		var fromView = stack.pop()
 		var currentView = stack[stack.length - 1]
 		var viewBelow = stack[stack.length - 2]
-		this.head.empty().append(this.renderHeadContent(currentView, viewBelow, fromView))
+		this.renderHeadContent(this.head.empty(), currentView, viewBelow, fromView)
 		this._scroll()
 	},
 	_scroll:function() {
