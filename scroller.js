@@ -50,9 +50,7 @@ var scroller = {
 		var fromView = stack.pop()
 		var currentView = stack[stack.length - 1]
 		var viewBelow = stack[stack.length - 2]
-		this.views[this.stack.length].empty()
 		this.head.empty().append(this.renderHeadContent(currentView, viewBelow, fromView))
-		
 		this._scroll()
 	},
 	_scroll:function() {
