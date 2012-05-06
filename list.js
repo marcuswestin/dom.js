@@ -41,10 +41,12 @@ module.exports = function list(items, onSelect, render) {
 		$(tag).on('touchend', function(event) {
 			if (tapElement) {
 				var item = data[$(tapElement).attr('listId')]
+				clear()
 				onSelect(item)
 				event.preventDefault()
+			} else {
+				clear()
 			}
-			clear()
 		})
 
 		$(tag).on('touchend', function() {
