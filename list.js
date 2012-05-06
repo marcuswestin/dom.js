@@ -1,7 +1,7 @@
 var isTouch = require('dom/isTouch')
 
 module.exports = function list(items, onSelect, render) {
-	return div('list', function(tag) {
+	return div(module.exports.className, function(tag) {
 		var data = { id:0 }
 		tag.append(map(items, function(item) {
 			var id = data.id++
@@ -54,3 +54,5 @@ module.exports = function list(items, onSelect, render) {
 		})
 	})
 }
+
+module.exports.className = 'dom-list'

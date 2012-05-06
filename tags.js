@@ -59,17 +59,8 @@
 			if (this.el) { this.el.parentNode.removeChild(this.el) }
 			return this
 		},
-		_renderTag:function _renderTag() {
-			this.el = document.createElement(this._tag)
-			var args = this._args
-			var index = 0
-			if (typeof args[0] == 'string') {
-				this.el.className = args[0]
-				index = 1
-			}
-			this._processArgs(this._args, index)
-			return this.el
-		},
+		_renderTag:render,
+		render:render,
 		_processArgs:function _processArgs(args, index) {
 			while (index < args.length) {
 				this._processArg(args[index++])
@@ -135,3 +126,15 @@
 		
 	}
 })()
+
+function render() {
+	this.el = document.createElement(this._tag)
+	var args = this._args
+	var index = 0
+	if (typeof args[0] == 'string') {
+		this.el.className = args[0]
+		index = 1
+	}
+	this._processArgs(this._args, index)
+	return this.el
+}
