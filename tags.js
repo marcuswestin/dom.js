@@ -124,10 +124,19 @@
 		}
 		jQuery.fn.init.prototype = originalInit.prototype
 		
+		var originalDomManip = jQuery.fn.domManip
+		jQuery.fn.domManip = function(args) {
+			if (args[0] && args[0]._renderTag) {
+				args[0] = args[0]._renderTag()
+			}
+			return originalDomManip.apply(this, arguments)
+		}
+		jQuery.fn.domManip.prototype = originalDomManip.prototype
 	}
 })()
 
 function render() {
+	if (this.el) { return this.el }
 	this.el = document.createElement(this._tag)
 	var args = this._args
 	var index = 0
