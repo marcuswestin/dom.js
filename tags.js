@@ -30,35 +30,6 @@
 	}
 	
 	var tagPrototype = {
-		appendTo:function appendTo(tag) {
-			(tag._el ? tag._el : tag).appendChild(this._renderTag())
-			return this
-		},
-		append:function append() {
-			var args = arguments
-			if (this.el) { this._processArgs(args, 0) }
-			else { this._args = this._args.concat(slice(args)) }
-			return args[args.length - 1]
-		},
-		prepend:function prepend(tag) {
-			var el = this.el
-			var children = el.children
-			tag = tag._renderTag ? tag._renderTag() : tag
-			if (children.length) {
-				el.insertBefore(tag, children[0])
-			} else {
-				el.appendChild(tag)
-			}
-			return this
-		},
-		empty:function empty() {
-			if (this.el) { this.el.innerHTML = '' }
-			return this
-		},
-		remove:function remove() {
-			if (this.el) { this.el.parentNode.removeChild(this.el) }
-			return this
-		},
 		_renderTag:render,
 		render:render,
 		_processArgs:function _processArgs(args, index) {
@@ -118,7 +89,7 @@
 		jQuery.fn.init = function() {
 			var selector = arguments[0]
 			if (selector && selector._renderTag) {
-				arguments[0] = selector.el
+				arguments[0] = selector._renderTag()
 			}
 			return originalInit.apply(this, arguments)
 		}
